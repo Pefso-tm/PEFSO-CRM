@@ -6,20 +6,26 @@
 <title>PEFSO Business Control</title>
 <link rel="manifest" href="manifest.json" />
 <style>
-body{font-family:Arial,sans-serif;margin:0;background:#f6f8fb;color:#162033}.top{background:#1F4E78;color:white;padding:16px}.wrap{padding:16px;max-width:1100px;margin:auto}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.card{background:white;border-radius:14px;padding:16px;box-shadow:0 3px 10px #0001}.card span{display:block;font-size:28px;font-weight:bold;margin-top:8px;color:#F97316}input,select,textarea,button{width:100%;padding:10px;margin:6px 0;border:1px solid #ccd3dd;border-radius:10px;box-sizing:border-box}button{background:#1F4E78;color:white;font-weight:bold;cursor:pointer}table{width:100%;border-collapse:collapse;background:white;border-radius:14px;overflow:hidden}th,td{padding:10px;border-bottom:1px solid #e7edf5;text-align:left}th{background:#d9eaf7;color:#1F4E78}.section{margin-top:18px}.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.note{color:#607084;font-size:13px}
+body{font-family:Arial,sans-serif;margin:0;background:#f6f8fb;color:#162033}.top{background:#1F4E78;color:white;padding:16px}.wrap{padding:16px;max-width:1100px;margin:auto}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.card{background:white;border-radius:14px;padding:16px;box-shadow:0 3px 10px #0001}.card span{display:block;font-size:28px;font-weight:bold;margin-top:8px;color:#F97316}input,select,textarea,button{width:100%;padding:10px;margin:6px 0;border:1px solid #ccd3dd;border-radius:10px;box-sizing:border-box}button{background:#1F4E78;color:white;font-weight:bold;cursor:pointer}button:disabled{opacity:.7;cursor:not-allowed}table{width:100%;border-collapse:collapse;background:white;border-radius:14px;overflow:hidden}th,td{padding:10px;border-bottom:1px solid #e7edf5;text-align:left}th{background:#d9eaf7;color:#1F4E78}.section{margin-top:18px}.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.note{color:#607084;font-size:13px}
 </style>
 </head>
 <body>
-<div class="top"><h2>PEFSO Business Control App - V1</h2><div id="userInfo">Customer CRM / Inquiry / Quotation</div></div>
+<div class="top">
+  <h2>PEFSO Business Control App - V1</h2>
+  <div id="userInfo">Customer CRM / Inquiry / Quotation</div>
+</div>
+
 <div class="wrap">
   <div id="loginBox" class="card">
     <h3>Đăng nhập nội bộ</h3>
     <p class="note">Nhập email đã được khai báo trong sheet USERS.</p>
     <input id="email" placeholder="Email công ty" value="thangmq@pefso.com" />
-    <button onclick="login()">Login</button>
+    <button id="loginBtn" onclick="login()">Login</button>
   </div>
+
   <div id="appBox" style="display:none">
     <div id="dashboard" class="grid"></div>
+
     <div class="section card">
       <h3>Tạo khách hàng mới</h3>
       <div class="formgrid">
@@ -28,17 +34,26 @@ body{font-family:Arial,sans-serif;margin:0;background:#f6f8fb;color:#162033}.top
         <input id="c_email" placeholder="Email" />
         <input id="c_phone" placeholder="Phone" />
         <input id="c_country" placeholder="Country" />
-        <select id="c_type"><option>Brand</option><option>OEM</option><option>Distributor</option><option>Trading Company</option><option>Startup</option><option>Other</option></select>
+        <select id="c_type">
+          <option>Brand</option>
+          <option>OEM</option>
+          <option>Distributor</option>
+          <option>Trading Company</option>
+          <option>Startup</option>
+          <option>Other</option>
+        </select>
       </div>
       <textarea id="c_notes" placeholder="Notes"></textarea>
-      <button onclick="createCustomer()">Create Customer</button>
+      <button id="createCustomerBtn" onclick="createCustomer()">Create Customer</button>
     </div>
+
     <div class="section">
       <h3>Customer List</h3>
       <div id="customers"></div>
     </div>
   </div>
 </div>
+
 <script src="app.js"></script>
 </body>
 </html>
