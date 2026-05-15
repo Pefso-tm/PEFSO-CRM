@@ -4,9 +4,6 @@
   --navy: #002b4f;
   --navy-2: #063b68;
   --blue: #1f4e78;
-  --green: #2f8f46;
-  --red: #dc2626;
-  --purple: #7c3aed;
   --bg: #f5f7fb;
   --card: #ffffff;
   --text: #14213d;
@@ -19,19 +16,35 @@
   box-sizing: border-box;
 }
 
+html,
 body {
   margin: 0;
+  padding: 0;
+  min-height: 100%;
   font-family: Arial, Helvetica, sans-serif;
   background: var(--bg);
   color: var(--text);
 }
 
-/* SIDEBAR DESKTOP */
+/* RESET SAFE */
+
+button,
+input,
+select,
+textarea {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* DESKTOP SIDEBAR */
 
 .sidebar {
   position: fixed;
-  left: 0;
   top: 0;
+  left: 0;
   width: 260px;
   height: 100vh;
   background: linear-gradient(180deg, var(--navy), #001b33);
@@ -46,7 +59,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #fff;
+  background: #ffffff;
   border-radius: 18px;
   padding: 12px;
   margin-bottom: 18px;
@@ -55,16 +68,18 @@ body {
 .sidebar-logo {
   width: 82px;
   height: auto;
+  display: block;
 }
 
 .sidebar-brand h1 {
   margin: 0;
   color: var(--orange);
   font-size: 22px;
+  line-height: 1;
 }
 
 .sidebar-brand p {
-  margin: 2px 0 0;
+  margin: 4px 0 0;
   color: var(--blue);
   font-size: 12px;
   font-weight: 700;
@@ -77,7 +92,8 @@ body {
   flex: 1;
 }
 
-.nav-btn {
+.sidebar-menu .nav-btn {
+  width: 100%;
   border: none;
   background: transparent;
   color: #dbeafe;
@@ -86,15 +102,15 @@ body {
   border-radius: 14px;
   font-size: 15px;
   font-weight: 700;
-  cursor: pointer;
+  line-height: 1.2;
 }
 
-.nav-btn:hover {
+.sidebar-menu .nav-btn:hover {
   background: rgba(255, 255, 255, 0.12);
   color: #fff;
 }
 
-.nav-btn.active {
+.sidebar-menu .nav-btn.active {
   background: var(--orange);
   color: #fff;
   box-shadow: 0 10px 20px rgba(242, 140, 0, 0.25);
@@ -107,7 +123,7 @@ body {
   font-size: 12px;
 }
 
-/* MAIN LAYOUT */
+/* MAIN SHELL */
 
 .main-shell {
   margin-left: 260px;
@@ -116,7 +132,7 @@ body {
 
 .topbar {
   height: 84px;
-  background: #fff;
+  background: #ffffff;
   border-bottom: 4px solid var(--orange);
   display: flex;
   align-items: center;
@@ -143,16 +159,18 @@ body {
 .topbar-logo {
   width: 116px;
   height: auto;
+  display: block;
 }
 
 .topbar h2 {
   margin: 0;
   color: var(--navy);
   font-size: 22px;
+  line-height: 1.1;
 }
 
 .topbar p {
-  margin: 3px 0 0;
+  margin: 4px 0 0;
   color: var(--muted);
   font-size: 13px;
 }
@@ -164,12 +182,13 @@ body {
   border-radius: 999px;
   font-size: 13px;
   font-weight: 800;
+  white-space: nowrap;
 }
 
 .app {
   padding: 26px;
   max-width: 1440px;
-  margin: auto;
+  margin: 0 auto;
 }
 
 /* LOGIN */
@@ -194,12 +213,13 @@ body {
   color: var(--muted);
 }
 
-/* SECTIONS */
+/* PAGE SECTIONS */
 
 .page-section {
   display: none;
 }
 
+.page-section.active-section,
 .active-section {
   display: block;
 }
@@ -224,16 +244,10 @@ body {
 
 .muted {
   color: var(--muted);
+  font-size: 13px;
 }
 
 /* CARDS */
-
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 16px;
-  margin-bottom: 18px;
-}
 
 .card {
   background: var(--card);
@@ -248,12 +262,25 @@ body {
   color: var(--navy);
 }
 
+.card b {
+  color: var(--navy);
+}
+
 .card span {
   display: block;
   font-size: 32px;
   font-weight: 900;
   margin-top: 8px;
   color: var(--orange);
+}
+
+/* DASHBOARD */
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+  margin-bottom: 18px;
 }
 
 .dashboard-grid .card {
@@ -305,7 +332,7 @@ body {
   font-weight: 900;
 }
 
-/* FORM */
+/* FORMS */
 
 .two-column {
   display: grid;
@@ -322,15 +349,15 @@ body {
 
 input,
 select,
-textarea,
-button {
+textarea {
   width: 100%;
   padding: 12px 13px;
   margin: 6px 0;
   border: 1px solid #cbd5e1;
   border-radius: 14px;
   font-size: 14px;
-  font-family: Arial, Helvetica, sans-serif;
+  background: #fff;
+  color: var(--text);
 }
 
 textarea {
@@ -346,19 +373,26 @@ textarea:focus {
   box-shadow: 0 0 0 4px rgba(242, 140, 0, 0.14);
 }
 
-button {
+.card > button,
+.login-card > button {
+  width: 100%;
+  padding: 12px 13px;
+  margin: 8px 0 0;
   background: var(--orange);
-  color: white;
+  color: #fff;
   border: none;
+  border-radius: 14px;
+  font-size: 14px;
   font-weight: 800;
-  cursor: pointer;
 }
 
-button:hover {
+.card > button:hover,
+.login-card > button:hover {
   background: var(--orange-dark);
 }
 
-button:disabled {
+.card > button:disabled,
+.login-card > button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
@@ -410,15 +444,12 @@ tr:hover td {
 
 /* MOBILE NAV */
 
-.mobile-bottom-nav {
-  display: none;
-}
-
+.mobile-bottom-nav,
 .mobile-more-menu {
   display: none;
 }
 
-/* RESPONSIVE */
+/* RESPONSIVE TABLET + MOBILE */
 
 @media (max-width: 1024px) {
   .sidebar {
@@ -457,7 +488,7 @@ tr:hover td {
 
   .app {
     padding: 16px;
-    padding-bottom: 92px;
+    padding-bottom: 100px;
   }
 
   .two-column,
@@ -494,12 +525,15 @@ tr:hover td {
   }
 
   .mobile-bottom-nav button {
+    width: auto;
     background: transparent;
     color: #dbeafe;
+    border: none;
     font-size: 11px;
     padding: 8px 4px;
     margin: 0;
     border-radius: 14px;
+    font-weight: 700;
   }
 
   .mobile-bottom-nav button:hover {
@@ -507,7 +541,6 @@ tr:hover td {
   }
 
   .mobile-more-menu {
-    display: none;
     position: fixed;
     left: 12px;
     right: 12px;
@@ -526,10 +559,14 @@ tr:hover td {
   }
 
   .mobile-more-menu button {
+    width: auto;
     background: #fff7ed;
     color: var(--navy);
     border: 1px solid rgba(242, 140, 0, 0.25);
+    border-radius: 14px;
+    padding: 12px 8px;
     font-size: 13px;
+    font-weight: 800;
   }
 }
 
@@ -573,8 +610,7 @@ tr:hover td {
 
   input,
   select,
-  textarea,
-  button {
+  textarea {
     font-size: 15px;
   }
 
