@@ -680,4 +680,115 @@ tr:hover td {
   table {
     min-width: 660px;
   }
+}/* ===== FINAL SIDEBAR LOGO + THIN DASHBOARD ICONS ===== */
+
+/* Sidebar logo: bỏ chữ, cho logo/icon full tỷ lệ */
+.sidebar-brand {
+  height: 118px;
+  padding: 10px;
+  margin-bottom: 18px;
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.sidebar-brand::before {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto;
+  background-image: url("pefso-symbol-512.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.sidebar-brand div,
+.sidebar-brand h1,
+.sidebar-brand p,
+.sidebar-logo {
+  display: none !important;
+}
+
+/* Dashboard icon: làm mảnh, tinh tế hơn */
+.dashboard-grid .card::before {
+  width: 42px;
+  height: 42px;
+  left: 22px;
+  top: 26px;
+  border-radius: 14px;
+  background: transparent !important;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1;
+  opacity: 0.92;
+}
+
+/* Màu icon riêng theo module */
+.dashboard-grid .card:nth-child(1)::before {
+  content: "□";
+  color: #155eef;
+}
+
+.dashboard-grid .card:nth-child(2)::before {
+  content: "▱";
+  color: #155eef;
+}
+
+.dashboard-grid .card:nth-child(3)::before {
+  content: "♙";
+  color: #155eef;
+}
+
+.dashboard-grid .card:nth-child(4)::before {
+  content: "？";
+  color: #155eef;
+}
+
+.dashboard-grid .card:nth-child(5)::before {
+  content: "☰";
+  color: #f28c00;
+}
+
+.dashboard-grid .card:nth-child(6)::before {
+  content: "PI";
+  color: #1f4e78;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.dashboard-grid .card:nth-child(7)::before {
+  content: "◇";
+  color: #f28c00;
+}
+
+.dashboard-grid .card:nth-child(8)::before {
+  content: "CI";
+  color: #7c3aed;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.dashboard-grid .card:nth-child(9)::before {
+  content: "$";
+  color: #dc2626;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.dashboard-grid .card:nth-child(10)::before {
+  content: "◷";
+  color: #039855;
+}
+
+/* Giảm nền tròn cam ở góc card cho sạch hơn */
+.dashboard-grid .card::after {
+  width: 58px;
+  height: 58px;
+  right: -18px;
+  bottom: -18px;
+  background: rgba(242, 140, 0, 0.07);
+}
+
+/* Card spacing tinh gọn hơn */
+.dashboard-grid .card {
+  padding-left: 82px;
 }
