@@ -3,6 +3,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbwxHRaWF6g8YNpmA3isO78e
 let currentUser = null;
 let customersCache = [];
 let productsCache = [];
+
 let dashboardCache = {
   products: 0,
   draftProducts: 0,
@@ -20,7 +21,7 @@ async function api(action, data = {}) {
     const emailInput = document.getElementById('email');
     const userEmail = emailInput ? emailInput.value.trim() : '';
 
-    const res = await fetch(API_URL, {
+    const response = await fetch(API_URL, {
       method: 'POST',
       body: JSON.stringify({
         action,
@@ -29,7 +30,7 @@ async function api(action, data = {}) {
       })
     });
 
-    return await res.json();
+    return await response.json();
   } catch (err) {
     return {
       ok: false,
@@ -37,6 +38,8 @@ async function api(action, data = {}) {
     };
   }
 }
+
+/* LOGIN */
 
 async function login() {
   const email = val('email');
@@ -74,11 +77,13 @@ async function login() {
   showStatus('Loading data...');
   await Promise.all([
     loadDashboard({ silent: true }),
-    loadCustomers({ silent: true }),
-    loadProducts({ silent: true })
+    loadProducts({ silent: true }),
+    loadCustomers({ silent: true })
   ]);
   hideStatus();
 }
+
+/* DASHBOARD */
 
 async function loadDashboard(options = {}) {
   const result = await api('getDashboard');
@@ -108,59 +113,30 @@ function renderDashboard() {
   if (!dashboard) return;
 
   dashboard.innerHTML = `
-    <div class="card"><b>Products</b><span>${dashboardCache.products}</span></div>
-    <div class="card"><b>Draft Products</b><span>${dashboardCache.draftProducts}</span></div>
-    <div class="card"><b>Customers</b><span>${dashboardCache.customers}</span></div>
-    <div class="card"><b>New Inquiries</b><span>${dashboardCache.inquiries}</span></div>
-    <div class="card"><b>Pending Quotations</b><span>${dashboardCache.quotations}</span></div>
-    <div class="card"><b>Open PI</b><span>${dashboardCache.openPI}</span></div>
-    <div class="card"><b>Open Orders</b><span>${dashboardCache.openOrders}</span></div>
-    <div class="card"><b>Payment Overdue</b><span>${dashboardCache.paymentOverdue}</span></div>
-    <div class="card"><b>Follow-up Due</b><span>${dashboardCache.followups}</span></div>
+    ${dashboardCard('Products', dashboardCache.products, 'Tổng sản phẩm')}
+    ${dashboardCard('Draft Products', dashboardCache.draftProducts, 'Chờ duyệt')}
+    ${dashboardCard('Customers', dashboardCache.customers, 'Tổng khách hàng')}
+    ${dashboardCard('New Inquiries', dashboardCache.inquiries, 'Đang xử lý')}
+    ${dashboardCard('Pending Quotations', dashboardCache.quotations, 'Chờ phản hồi')}
+    ${dashboardCard('Open PI', dashboardCache.openPI, 'Chưa hoàn tất')}
+    ${dashboardCard('Open Orders', dashboardCache.openOrders, 'Đang thực hiện')}
+    ${dashboardCard('CI / PKL Issued', 0, 'Đã phát hành')}
+    ${dashboardCard('Payment Overdue', dashboardCache.paymentOverdue, 'Quá hạn')}
+    ${dashboardCard('Follow-up Due', dashboardCache.followups, 'Cần follow')}
   `;
 }
 
-async function loadCustomers(options = {}) {
-  const result = await api('listCustomers');
-
-  if (!result.ok) {
-    if (!options.silent) showToast(result.error || 'Cannot load customers', 'error');
-    return;
-  }
-
-  customersCache = Array.isArray(result.data) ? result.data : [];
-  renderCustomers();
-}
-
-function renderCustomers() {
-  const container = document.getElementById('customers');
-  if (!container) return;
-
-  const rows = customersCache.map(c => `
-    <tr>
-      <td>${safe(c.Customer_ID)}</td>
-      <td>${safe(c.Company_Name)}</td>
-      <td>${safe(c.Contact_Person)}</td>
-      <td>${safe(c.Country)}</td>
-      <td>${safe(c.Status || 'Active')}</td>
-    </tr>
-  `).join('');
-
-  container.innerHTML = `
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Company</th>
-          <th>Contact</th>
-          <th>Country</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>${rows}</tbody>
-    </table>
+function dashboardCard(title, value, subtitle) {
+  return `
+    <div class="card">
+      <b>${safe(title)}</b>
+      <span>${safe(value)}</span>
+      <p class="muted">${safe(subtitle || '')}</p>
+    </div>
   `;
 }
+
+/* PRODUCT MASTER */
 
 async function loadProducts(options = {}) {
   const result = await api('listProducts');
@@ -178,12 +154,19 @@ function renderProducts() {
   const container = document.getElementById('products');
   if (!container) return;
 
+  if (!productsCache.length) {
+    container.innerHTML = `<p class="muted">No product data yet.</p>`;
+    return;
+  }
+
   const rows = productsCache.map(p => `
     <tr>
       <td>${safe(p.Product_Code)}</td>
       <td>${safe(p.Product_Name_EN)}</td>
       <td>${safe(p.Product_Name_VN)}</td>
       <td>${safe(p.HS_Code)}</td>
+      <td>${safe(p.Category)}</td>
+      <td>${safe(p.Unit)}</td>
       <td>${safe(p.Product_Status || 'Draft')}</td>
     </tr>
   `).join('');
@@ -196,6 +179,147 @@ function renderProducts() {
           <th>Name EN</th>
           <th>Name VN</th>
           <th>HS Code</th>
+          <th>Category</th>
+          <th>Unit</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+}
+
+async function createProduct() {
+  const data = {
+    Product_Name_EN: val('p_name_en'),
+    Product_Name_VN: val('p_name_vn'),
+    HS_Code: val('p_hs_code'),
+    Category: val('p_category'),
+    Material: val('p_material'),
+    Specification: val('p_specification'),
+    Unit: val('p_unit'),
+    MOQ: val('p_moq'),
+    Standard_Price: val('p_standard_price'),
+    Currency: val('p_currency') || 'USD',
+    Customs_Description: val('p_customs_description'),
+    VAT_Description: val('p_vat_description'),
+    Packing_Standard: val('p_packing_standard'),
+    Notes: val('p_notes')
+  };
+
+  const required = [
+    'Product_Name_EN',
+    'Product_Name_VN',
+    'HS_Code',
+    'Category',
+    'Material',
+    'Specification',
+    'Unit'
+  ];
+
+  const missing = required.filter(field => !data[field]);
+
+  if (missing.length) {
+    showToast('Missing required product information', 'error');
+    return;
+  }
+
+  setButtonBusy('createProductBtn', true, 'Saving...');
+  showStatus('Saving product...');
+
+  const result = await api('createProduct', data);
+
+  setButtonBusy('createProductBtn', false, 'Create Product');
+  hideStatus();
+
+  if (!result.ok) {
+    showToast(result.error || 'Cannot create product', 'error');
+    return;
+  }
+
+  productsCache.unshift(result.data);
+  dashboardCache.products += 1;
+  dashboardCache.draftProducts += 1;
+
+  renderProducts();
+  renderDashboard();
+  clearProductForm();
+
+  showToast('Product created: ' + result.data.Product_Code, 'success');
+
+  setTimeout(() => {
+    loadProducts({ silent: true });
+    loadDashboard({ silent: true });
+  }, 1200);
+}
+
+function clearProductForm() {
+  [
+    'p_name_en',
+    'p_name_vn',
+    'p_hs_code',
+    'p_category',
+    'p_material',
+    'p_specification',
+    'p_unit',
+    'p_moq',
+    'p_standard_price',
+    'p_currency',
+    'p_customs_description',
+    'p_vat_description',
+    'p_packing_standard',
+    'p_notes'
+  ].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+}
+
+/* CUSTOMER CRM */
+
+async function loadCustomers(options = {}) {
+  const result = await api('listCustomers');
+
+  if (!result.ok) {
+    if (!options.silent) showToast(result.error || 'Cannot load customers', 'error');
+    return;
+  }
+
+  customersCache = Array.isArray(result.data) ? result.data : [];
+  renderCustomers();
+}
+
+function renderCustomers() {
+  const container = document.getElementById('customers');
+  if (!container) return;
+
+  if (!customersCache.length) {
+    container.innerHTML = `<p class="muted">No customer data yet.</p>`;
+    return;
+  }
+
+  const rows = customersCache.map(c => `
+    <tr>
+      <td>${safe(c.Customer_ID)}</td>
+      <td>${safe(c.Company_Name)}</td>
+      <td>${safe(c.Contact_Person)}</td>
+      <td>${safe(c.Email)}</td>
+      <td>${safe(c.Country)}</td>
+      <td>${safe(c.Customer_Type)}</td>
+      <td>${safe(c.Status || 'Active')}</td>
+    </tr>
+  `).join('');
+
+  container.innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Company</th>
+          <th>Contact</th>
+          <th>Email</th>
+          <th>Country</th>
+          <th>Type</th>
           <th>Status</th>
         </tr>
       </thead>
@@ -234,15 +358,14 @@ async function createCustomer() {
     return;
   }
 
-  const newCustomer = result.data;
-  customersCache.unshift(newCustomer);
+  customersCache.unshift(result.data);
   dashboardCache.customers += 1;
 
   renderCustomers();
   renderDashboard();
   clearCustomerForm();
 
-  showToast('Customer created: ' + newCustomer.Customer_ID, 'success');
+  showToast('Customer created: ' + result.data.Customer_ID, 'success');
 
   setTimeout(() => {
     loadCustomers({ silent: true });
@@ -250,74 +373,24 @@ async function createCustomer() {
   }, 1200);
 }
 
-async function createProduct() {
-  const data = {
-    Product_Name_EN: val('p_name_en'),
-    Product_Name_VN: val('p_name_vn'),
-    HS_Code: val('p_hs_code'),
-    Category: val('p_category'),
-    Material: val('p_material'),
-    Specification: val('p_specification'),
-    Unit: val('p_unit'),
-    MOQ: val('p_moq'),
-    Standard_Price: val('p_standard_price'),
-    Currency: val('p_currency'),
-    Customs_Description: val('p_customs_description'),
-    VAT_Description: val('p_vat_description'),
-    Packing_Standard: val('p_packing_standard'),
-    Notes: val('p_notes')
-  };
+function clearCustomerForm() {
+  [
+    'c_company',
+    'c_contact',
+    'c_email',
+    'c_phone',
+    'c_country',
+    'c_notes'
+  ].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
 
-  if (!data.Product_Name_EN || !data.Product_Name_VN || !data.HS_Code || !data.Category || !data.Material || !data.Specification || !data.Unit) {
-    showToast('Missing required product information', 'error');
-    return;
-  }
-
-  setButtonBusy('createProductBtn', true, 'Saving...');
-  showStatus('Saving product...');
-
-  const result = await api('createProduct', data);
-
-  setButtonBusy('createProductBtn', false, 'Create Product');
-  hideStatus();
-
-  if (!result.ok) {
-    showToast(result.error || 'Cannot create product', 'error');
-    return;
-  }
-
-  productsCache.unshift(result.data);
-  dashboardCache.products += 1;
-  dashboardCache.draftProducts += 1;
-
-  renderProducts();
-  renderDashboard();
-
-  showToast('Product created: ' + result.data.Product_Code, 'success');
-
-  setTimeout(() => {
-    loadProducts({ silent: true });
-    loadDashboard({ silent: true });
-  }, 1200);
+  const typeEl = document.getElementById('c_type');
+  if (typeEl) typeEl.selectedIndex = 0;
 }
 
-async function approveProduct(productId) {
-  if (!productId) {
-    showToast('Missing Product ID', 'error');
-    return;
-  }
-
-  const result = await api('approveProduct', { Product_ID: productId });
-
-  if (!result.ok) {
-    showToast(result.error || 'Cannot approve product', 'error');
-    return;
-  }
-
-  showToast('Product approved', 'success');
-  await loadProducts({ silent: true });
-  await loadDashboard({ silent: true });
-}
+/* FUTURE MODULE API HELPERS */
 
 async function createInquiry(data) {
   const result = await api('createInquiry', data);
@@ -388,24 +461,7 @@ function notifyResult(result, successMessage) {
   loadDashboard({ silent: true });
 }
 
-function clearCustomerForm() {
-  const ids = [
-    'c_company',
-    'c_contact',
-    'c_email',
-    'c_phone',
-    'c_country',
-    'c_notes'
-  ];
-
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
-
-  const typeEl = document.getElementById('c_type');
-  if (typeEl) typeEl.selectedIndex = 0;
-}
+/* UI HELPERS */
 
 function val(id) {
   const el = document.getElementById(id);
@@ -429,7 +485,6 @@ function safe(value) {
 
 function setButtonBusy(buttonId, isBusy, text) {
   const btn = document.getElementById(buttonId);
-
   if (!btn) return;
 
   btn.disabled = isBusy;
@@ -449,13 +504,13 @@ function showStatus(message) {
     status.style.bottom = '18px';
     status.style.transform = 'translateX(-50%)';
     status.style.background = '#ffffff';
-    status.style.color = '#1f4e79';
-    status.style.border = '1px solid #d8e3ef';
+    status.style.color = '#002b4f';
+    status.style.border = '1px solid #e5eaf1';
     status.style.borderRadius = '999px';
-    status.style.padding = '8px 14px';
+    status.style.padding = '9px 15px';
     status.style.fontSize = '13px';
-    status.style.fontWeight = '600';
-    status.style.boxShadow = '0 8px 24px rgba(0,0,0,0.12)';
+    status.style.fontWeight = '700';
+    status.style.boxShadow = '0 10px 28px rgba(20,33,61,0.12)';
     status.style.zIndex = '9998';
     document.body.appendChild(status);
   }
@@ -480,15 +535,15 @@ function showToast(message, type = 'success') {
   toast.style.position = 'fixed';
   toast.style.top = '20px';
   toast.style.right = '20px';
-  toast.style.maxWidth = '360px';
-  toast.style.padding = '12px 18px';
-  toast.style.borderRadius = '12px';
+  toast.style.maxWidth = '380px';
+  toast.style.padding = '13px 18px';
+  toast.style.borderRadius = '14px';
   toast.style.color = '#fff';
   toast.style.fontSize = '14px';
-  toast.style.fontWeight = '600';
-  toast.style.boxShadow = '0 10px 28px rgba(0,0,0,0.22)';
+  toast.style.fontWeight = '700';
+  toast.style.boxShadow = '0 14px 34px rgba(0,0,0,0.24)';
   toast.style.zIndex = '9999';
-  toast.style.background = type === 'error' ? '#b00020' : '#1f4e79';
+  toast.style.background = type === 'error' ? '#b00020' : '#002b4f';
   toast.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
   toast.style.opacity = '0';
   toast.style.transform = 'translateY(-8px)';
@@ -506,6 +561,8 @@ function showToast(message, type = 'success') {
     setTimeout(() => toast.remove(), 280);
   }, 2600);
 }
+
+/* PWA */
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./service-worker.js').catch(() => {});
