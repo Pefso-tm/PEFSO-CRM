@@ -617,4 +617,145 @@ tr:hover td {
   table {
     min-width: 660px;
   }
+}/* ===== PEFSO UI REFINEMENT V1.2 ===== */
+
+.sidebar {
+  width: 280px;
+  padding: 18px 16px;
+}
+
+.main-shell {
+  margin-left: 280px;
+}
+
+.sidebar-brand {
+  min-height: 86px;
+  justify-content: center;
+  padding: 14px;
+  border-radius: 18px;
+}
+
+.sidebar-logo {
+  width: 180px;
+  max-height: 58px;
+  object-fit: contain;
+}
+
+.sidebar-brand div {
+  display: none;
+}
+
+.sidebar-menu {
+  margin-top: 8px;
+  gap: 10px;
+}
+
+.sidebar-menu .nav-btn {
+  font-size: 15px;
+  padding: 15px 16px;
+  border-radius: 16px;
+}
+
+.topbar {
+  height: 92px;
+  padding: 16px 30px;
+}
+
+.topbar-logo {
+  width: 132px;
+  max-height: 58px;
+  object-fit: contain;
+}
+
+.topbar h2 {
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.topbar p {
+  font-size: 14px;
+}
+
+.app {
+  max-width: 1500px;
+  padding: 28px 34px;
+}
+
+.page-title {
+  margin-bottom: 20px;
+}
+
+.page-title h2 {
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.dashboard-grid {
+  grid-template-columns: repeat(4, minmax(210px, 1fr));
+  gap: 18px;
+}
+
+.dashboard-grid .card {
+  min-height: 142px;
+  padding: 22px;
+}
+
+.card {
+  border-radius: 22px;
+}
+
+.card b {
+  font-size: 16px;
+}
+
+.card span {
+  font-size: 36px;
+}
+
+.dashboard-lower-grid {
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.sales-flow {
+  justify-content: space-between;
+}
+
+.sales-flow div {
+  min-width: 118px;
+  padding: 14px 16px;
+  border-radius: 18px;
+}
+
+.user-info {
+  padding: 13px 18px;
+  font-size: 14px;
+}
+
+@media (max-width: 1024px) {
+  .main-shell {
+    margin-left: 0;
+  }
+
+  .topbar-logo {
+    width: 112px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 540px) {
+  .topbar-logo {
+    width: 96px;
+  }
+
+  .topbar-brand div p {
+    display: none;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
