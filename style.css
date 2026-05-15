@@ -2,13 +2,14 @@
   --orange: #f28c00;
   --orange-dark: #d97706;
   --navy: #002b4f;
-  --navy-light: #063b68;
+  --navy-2: #063b68;
   --bg: #f4f7fb;
   --card: #ffffff;
   --text: #12233f;
   --muted: #667085;
   --line: #e4eaf2;
   --shadow: 0 10px 30px rgba(15, 35, 65, 0.08);
+  --soft-orange: #fff4e3;
 }
 
 * {
@@ -43,7 +44,7 @@ button {
   top: 0;
   width: 270px;
   height: 100vh;
-  background: linear-gradient(180deg, #002b4f 0%, #001c35 100%);
+  background: linear-gradient(180deg, #002b4f 0%, #001b33 100%);
   padding: 18px;
   z-index: 50;
   display: flex;
@@ -51,31 +52,59 @@ button {
 }
 
 .sidebar-brand {
-  background: #ffffff;
-  border-radius: 18px;
-  height: 86px;
-  padding: 12px 14px;
+  background: transparent;
+  height: 120px;
+  padding: 8px 6px 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  flex-direction: column;
+}
+
+.sidebar-brand::before {
+  content: "";
+  width: 72px;
+  height: 72px;
+  background-image: url("pefso-symbol-512.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: block;
+  margin-bottom: 8px;
 }
 
 .sidebar-logo {
-  width: 185px;
-  max-height: 62px;
-  object-fit: contain;
-  display: block;
+  display: none;
 }
 
 .sidebar-brand div {
-  display: none;
+  display: block;
+  text-align: center;
+}
+
+.sidebar-brand h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 0.6px;
+  line-height: 1;
+}
+
+.sidebar-brand p {
+  margin: 5px 0 0;
+  color: #ffbd66;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .sidebar-menu {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 8px;
 }
 
 .sidebar-menu .nav-btn {
@@ -96,7 +125,7 @@ button {
 }
 
 .sidebar-menu .nav-btn.active {
-  background: linear-gradient(135deg, #ff9d00, #f28c00);
+  background: linear-gradient(135deg, #ff9800, #f28c00);
   color: #ffffff;
   box-shadow: 0 12px 26px rgba(242, 140, 0, 0.32);
 }
@@ -110,7 +139,7 @@ button {
   line-height: 1.4;
 }
 
-/* ===== MAIN ===== */
+/* ===== TOPBAR ===== */
 
 .main-shell {
   margin-left: 270px;
@@ -125,7 +154,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 32px;
+  padding: 14px 34px;
   position: sticky;
   top: 0;
   z-index: 20;
@@ -135,24 +164,20 @@ button {
   display: none;
 }
 
+.topbar-logo {
+  display: none;
+}
+
 .topbar-brand {
   display: flex;
   align-items: center;
-  gap: 18px;
-}
-
-.topbar-logo {
-  width: 150px;
-  max-height: 58px;
-  object-fit: contain;
-  display: block;
 }
 
 .topbar-brand h2 {
   margin: 0;
-  font-size: 25px;
-  font-weight: 900;
   color: var(--navy);
+  font-size: 28px;
+  font-weight: 900;
   line-height: 1.1;
 }
 
@@ -163,7 +188,7 @@ button {
 }
 
 .user-info {
-  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  background: linear-gradient(135deg, var(--navy), var(--navy-2));
   color: #ffffff;
   padding: 12px 18px;
   border-radius: 999px;
@@ -172,7 +197,7 @@ button {
   white-space: nowrap;
 }
 
-/* ===== APP CONTENT ===== */
+/* ===== CONTENT ===== */
 
 .app {
   max-width: 1360px;
@@ -230,7 +255,7 @@ button {
   font-size: 13px;
 }
 
-/* ===== DASHBOARD ===== */
+/* ===== DASHBOARD CARDS WITH ICONS ===== */
 
 .dashboard-grid {
   display: grid;
@@ -248,9 +273,79 @@ button {
 }
 
 .dashboard-grid .card {
-  min-height: 136px;
+  min-height: 146px;
   position: relative;
   overflow: hidden;
+  padding-left: 86px;
+}
+
+.dashboard-grid .card::before {
+  position: absolute;
+  left: 22px;
+  top: 27px;
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  font-weight: 900;
+  background: #eef4ff;
+  color: #155eef;
+}
+
+.dashboard-grid .card:nth-child(1)::before {
+  content: "▣";
+}
+
+.dashboard-grid .card:nth-child(2)::before {
+  content: "□";
+}
+
+.dashboard-grid .card:nth-child(3)::before {
+  content: "👥";
+}
+
+.dashboard-grid .card:nth-child(4)::before {
+  content: "?";
+}
+
+.dashboard-grid .card:nth-child(5)::before {
+  content: "≡";
+  background: #fff1dd;
+  color: var(--orange);
+}
+
+.dashboard-grid .card:nth-child(6)::before {
+  content: "PI";
+  background: #eef4ff;
+  color: #155eef;
+  font-size: 14px;
+}
+
+.dashboard-grid .card:nth-child(7)::before {
+  content: "⬡";
+  background: #fff1dd;
+  color: var(--orange);
+}
+
+.dashboard-grid .card:nth-child(8)::before {
+  content: "CI";
+  background: #f4ecff;
+  color: #7c3aed;
+  font-size: 14px;
+}
+
+.dashboard-grid .card:nth-child(9)::before {
+  content: "$";
+  background: #fff1f2;
+  color: #dc2626;
+}
+
+.dashboard-grid .card:nth-child(10)::before {
+  content: "◷";
+  background: #ecfdf3;
+  color: #039855;
 }
 
 .dashboard-grid .card::after {
@@ -284,6 +379,8 @@ button {
   margin: 10px 0 6px;
 }
 
+/* ===== SALES FLOW ===== */
+
 .dashboard-lower-grid {
   display: grid;
   grid-template-columns: 2fr 0.95fr;
@@ -315,7 +412,7 @@ button {
   font-weight: 900;
 }
 
-/* ===== FORM MODULES ===== */
+/* ===== FORMS AND TABLES ===== */
 
 .two-column {
   display: grid;
@@ -430,12 +527,20 @@ tr:hover td {
   }
 
   .topbar {
-    height: 84px;
+    height: 86px;
     padding: 12px 16px;
   }
 
-  .topbar-logo {
-    width: 120px;
+  .topbar-brand::before {
+    content: "";
+    width: 76px;
+    height: 54px;
+    background-image: url("pefso-symbol-mobile.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: block;
+    margin-right: 12px;
   }
 
   .topbar-brand h2 {
@@ -458,6 +563,20 @@ tr:hover td {
   .dashboard-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
+  }
+
+  .dashboard-grid .card {
+    min-height: 118px;
+    padding: 14px 14px 14px 62px;
+  }
+
+  .dashboard-grid .card::before {
+    left: 14px;
+    top: 19px;
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
+    border-radius: 12px;
   }
 
   .dashboard-lower-grid,
@@ -528,10 +647,6 @@ tr:hover td {
 }
 
 @media (max-width: 540px) {
-  .topbar-logo {
-    width: 105px;
-  }
-
   .topbar-brand h2 {
     font-size: 16px;
   }
@@ -544,13 +659,8 @@ tr:hover td {
     font-size: 24px;
   }
 
-  .dashboard-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .dashboard-grid .card {
     min-height: 112px;
-    padding: 14px;
   }
 
   .card b {
