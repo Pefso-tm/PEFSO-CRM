@@ -1,11 +1,17 @@
-const API_URL = 'https://script.google.com/macros/s/AKfycbxJsRbT5ROVW-WysN7saJbug5mnw0PIcdQesh1Dca5zrKHTN7QMiUvL1IkC35EVE8Pf/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbztZk1GrWqI78GxSksmJ9yITrAgM_07inLKB_lAFRlPxoZvG7ixleJ03flGRnXfVecH/exec';
 
 let currentUser = null;
 let customersCache = [];
+let productsCache = [];
 let dashboardCache = {
+  products: 0,
+  draftProducts: 0,
   customers: 0,
   inquiries: 0,
   quotations: 0,
+  openPI: 0,
+  openOrders: 0,
+  paymentOverdue: 0,
   followups: 0
 };
 
@@ -57,14 +63,19 @@ async function login() {
 
   document.getElementById('loginBox').style.display = 'none';
   document.getElementById('appBox').style.display = 'block';
-  document.getElementById('userInfo').innerText = `${currentUser.Full_Name || ''} - ${currentUser.Role || ''}`;
+
+  const userInfo = document.getElementById('userInfo');
+  if (userInfo) {
+    userInfo.innerText = `${currentUser.Full_Name || ''} - ${currentUser.Role || ''}`;
+  }
 
   showToast('Login successful', 'success');
 
-  showStatus('Loading dashboard...');
+  showStatus('Loading data...');
   await Promise.all([
     loadDashboard({ silent: true }),
-    loadCustomers({ silent: true })
+    loadCustomers({ silent: true }),
+    loadProducts({ silent: true })
   ]);
   hideStatus();
 }
@@ -78,9 +89,14 @@ async function loadDashboard(options = {}) {
   }
 
   dashboardCache = {
+    products: Number(result.data.products || 0),
+    draftProducts: Number(result.data.draftProducts || 0),
     customers: Number(result.data.customers || 0),
     inquiries: Number(result.data.inquiries || 0),
     quotations: Number(result.data.quotations || 0),
+    openPI: Number(result.data.openPI || 0),
+    openOrders: Number(result.data.openOrders || 0),
+    paymentOverdue: Number(result.data.paymentOverdue || 0),
     followups: Number(result.data.followups || 0)
   };
 
@@ -92,10 +108,15 @@ function renderDashboard() {
   if (!dashboard) return;
 
   dashboard.innerHTML = `
+    <div class="card"><b>Products</b><span>${dashboardCache.products}</span></div>
+    <div class="card"><b>Draft Products</b><span>${dashboardCache.draftProducts}</span></div>
     <div class="card"><b>Customers</b><span>${dashboardCache.customers}</span></div>
-    <div class="card"><b>Inquiries</b><span>${dashboardCache.inquiries}</span></div>
-    <div class="card"><b>Quotations</b><span>${dashboardCache.quotations}</span></div>
-    <div class="card"><b>Open Follow-ups</b><span>${dashboardCache.followups}</span></div>
+    <div class="card"><b>New Inquiries</b><span>${dashboardCache.inquiries}</span></div>
+    <div class="card"><b>Pending Quotations</b><span>${dashboardCache.quotations}</span></div>
+    <div class="card"><b>Open PI</b><span>${dashboardCache.openPI}</span></div>
+    <div class="card"><b>Open Orders</b><span>${dashboardCache.openOrders}</span></div>
+    <div class="card"><b>Payment Overdue</b><span>${dashboardCache.paymentOverdue}</span></div>
+    <div class="card"><b>Follow-up Due</b><span>${dashboardCache.followups}</span></div>
   `;
 }
 
@@ -141,6 +162,48 @@ function renderCustomers() {
   `;
 }
 
+async function loadProducts(options = {}) {
+  const result = await api('listProducts');
+
+  if (!result.ok) {
+    if (!options.silent) showToast(result.error || 'Cannot load products', 'error');
+    return;
+  }
+
+  productsCache = Array.isArray(result.data) ? result.data : [];
+  renderProducts();
+}
+
+function renderProducts() {
+  const container = document.getElementById('products');
+  if (!container) return;
+
+  const rows = productsCache.map(p => `
+    <tr>
+      <td>${safe(p.Product_Code)}</td>
+      <td>${safe(p.Product_Name_EN)}</td>
+      <td>${safe(p.Product_Name_VN)}</td>
+      <td>${safe(p.HS_Code)}</td>
+      <td>${safe(p.Product_Status || 'Draft')}</td>
+    </tr>
+  `).join('');
+
+  container.innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Name EN</th>
+          <th>Name VN</th>
+          <th>HS Code</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+}
+
 async function createCustomer() {
   const data = {
     Company_Name: val('c_company'),
@@ -159,7 +222,7 @@ async function createCustomer() {
   }
 
   setButtonBusy('createCustomerBtn', true, 'Saving...');
-  showStatus('Saving customer to database...');
+  showStatus('Saving customer...');
 
   const result = await api('createCustomer', data);
 
@@ -171,18 +234,7 @@ async function createCustomer() {
     return;
   }
 
-  const newCustomer = {
-    Customer_ID: result.data.Customer_ID,
-    Company_Name: data.Company_Name,
-    Contact_Person: data.Contact_Person,
-    Email: data.Email,
-    Phone: data.Phone,
-    Country: data.Country,
-    Customer_Type: data.Customer_Type,
-    Status: 'Active',
-    Notes: data.Notes
-  };
-
+  const newCustomer = result.data;
   customersCache.unshift(newCustomer);
   dashboardCache.customers += 1;
 
@@ -190,12 +242,150 @@ async function createCustomer() {
   renderDashboard();
   clearCustomerForm();
 
-  showToast('Customer created: ' + result.data.Customer_ID, 'success');
+  showToast('Customer created: ' + newCustomer.Customer_ID, 'success');
 
   setTimeout(() => {
     loadCustomers({ silent: true });
     loadDashboard({ silent: true });
   }, 1200);
+}
+
+async function createProduct() {
+  const data = {
+    Product_Name_EN: val('p_name_en'),
+    Product_Name_VN: val('p_name_vn'),
+    HS_Code: val('p_hs_code'),
+    Category: val('p_category'),
+    Material: val('p_material'),
+    Specification: val('p_specification'),
+    Unit: val('p_unit'),
+    MOQ: val('p_moq'),
+    Standard_Price: val('p_standard_price'),
+    Currency: val('p_currency'),
+    Customs_Description: val('p_customs_description'),
+    VAT_Description: val('p_vat_description'),
+    Packing_Standard: val('p_packing_standard'),
+    Notes: val('p_notes')
+  };
+
+  if (!data.Product_Name_EN || !data.Product_Name_VN || !data.HS_Code || !data.Category || !data.Material || !data.Specification || !data.Unit) {
+    showToast('Missing required product information', 'error');
+    return;
+  }
+
+  setButtonBusy('createProductBtn', true, 'Saving...');
+  showStatus('Saving product...');
+
+  const result = await api('createProduct', data);
+
+  setButtonBusy('createProductBtn', false, 'Create Product');
+  hideStatus();
+
+  if (!result.ok) {
+    showToast(result.error || 'Cannot create product', 'error');
+    return;
+  }
+
+  productsCache.unshift(result.data);
+  dashboardCache.products += 1;
+  dashboardCache.draftProducts += 1;
+
+  renderProducts();
+  renderDashboard();
+
+  showToast('Product created: ' + result.data.Product_Code, 'success');
+
+  setTimeout(() => {
+    loadProducts({ silent: true });
+    loadDashboard({ silent: true });
+  }, 1200);
+}
+
+async function approveProduct(productId) {
+  if (!productId) {
+    showToast('Missing Product ID', 'error');
+    return;
+  }
+
+  const result = await api('approveProduct', { Product_ID: productId });
+
+  if (!result.ok) {
+    showToast(result.error || 'Cannot approve product', 'error');
+    return;
+  }
+
+  showToast('Product approved', 'success');
+  await loadProducts({ silent: true });
+  await loadDashboard({ silent: true });
+}
+
+async function createInquiry(data) {
+  const result = await api('createInquiry', data);
+  notifyResult(result, 'Inquiry created');
+  return result;
+}
+
+async function createQuotation(data) {
+  const result = await api('createQuotation', data);
+  notifyResult(result, 'Quotation created');
+  return result;
+}
+
+async function createPI(data) {
+  const result = await api('createPI', data);
+  notifyResult(result, 'PI created');
+  return result;
+}
+
+async function createOrder(data) {
+  const result = await api('createOrder', data);
+  notifyResult(result, 'Order created');
+  return result;
+}
+
+async function createCI(data) {
+  const result = await api('createCI', data);
+  notifyResult(result, 'Commercial Invoice created');
+  return result;
+}
+
+async function createPackingList(data) {
+  const result = await api('createPackingList', data);
+  notifyResult(result, 'Packing List created');
+  return result;
+}
+
+async function createPayment(data) {
+  const result = await api('createPayment', data);
+  notifyResult(result, 'Payment record created');
+  return result;
+}
+
+async function createFollowup(data) {
+  const result = await api('createFollowup', data);
+  notifyResult(result, 'Follow-up created');
+  return result;
+}
+
+async function getCustomerDetail(customerId) {
+  const result = await api('getCustomerDetail', { Customer_ID: customerId });
+
+  if (!result.ok) {
+    showToast(result.error || 'Cannot load customer detail', 'error');
+    return null;
+  }
+
+  return result.data;
+}
+
+function notifyResult(result, successMessage) {
+  if (!result.ok) {
+    showToast(result.error || 'Action failed', 'error');
+    return;
+  }
+
+  showToast(successMessage, 'success');
+  loadDashboard({ silent: true });
 }
 
 function clearCustomerForm() {
@@ -240,17 +430,7 @@ function safe(value) {
 function setButtonBusy(buttonId, isBusy, text) {
   const btn = document.getElementById(buttonId);
 
-  if (!btn) {
-    const buttons = document.querySelectorAll('button');
-    buttons.forEach(button => {
-      const label = button.innerText.trim().toLowerCase();
-      if (label.includes('create customer') || label.includes('login')) {
-        button.disabled = isBusy;
-        if (text) button.innerText = text;
-      }
-    });
-    return;
-  }
+  if (!btn) return;
 
   btn.disabled = isBusy;
   btn.innerText = text || btn.innerText;
