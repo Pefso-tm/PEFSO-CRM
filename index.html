@@ -1,59 +1,160 @@
 <!doctype html>
 <html lang="vi">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>PEFSO Business Control</title>
-<link rel="manifest" href="manifest.json" />
-<style>
-body{font-family:Arial,sans-serif;margin:0;background:#f6f8fb;color:#162033}.top{background:#1F4E78;color:white;padding:16px}.wrap{padding:16px;max-width:1100px;margin:auto}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.card{background:white;border-radius:14px;padding:16px;box-shadow:0 3px 10px #0001}.card span{display:block;font-size:28px;font-weight:bold;margin-top:8px;color:#F97316}input,select,textarea,button{width:100%;padding:10px;margin:6px 0;border:1px solid #ccd3dd;border-radius:10px;box-sizing:border-box}button{background:#1F4E78;color:white;font-weight:bold;cursor:pointer}button:disabled{opacity:.7;cursor:not-allowed}table{width:100%;border-collapse:collapse;background:white;border-radius:14px;overflow:hidden}th,td{padding:10px;border-bottom:1px solid #e7edf5;text-align:left}th{background:#d9eaf7;color:#1F4E78}.section{margin-top:18px}.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.note{color:#607084;font-size:13px}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PEFSO Business Control App V1.1</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-<div class="top">
-  <h2>PEFSO Business Control App - V1</h2>
-  <div id="userInfo">Customer CRM / Inquiry / Quotation</div>
-</div>
-
-<div class="wrap">
-  <div id="loginBox" class="card">
-    <h3>Đăng nhập nội bộ</h3>
-    <p class="note">Nhập email đã được khai báo trong sheet USERS.</p>
-    <input id="email" placeholder="Email công ty" value="thangmq@pefso.com" />
-    <button id="loginBtn" onclick="login()">Login</button>
-  </div>
-
-  <div id="appBox" style="display:none">
-    <div id="dashboard" class="grid"></div>
-
-    <div class="section card">
-      <h3>Tạo khách hàng mới</h3>
-      <div class="formgrid">
-        <input id="c_company" placeholder="Company Name" />
-        <input id="c_contact" placeholder="Contact Person" />
-        <input id="c_email" placeholder="Email" />
-        <input id="c_phone" placeholder="Phone" />
-        <input id="c_country" placeholder="Country" />
-        <select id="c_type">
-          <option>Brand</option>
-          <option>OEM</option>
-          <option>Distributor</option>
-          <option>Trading Company</option>
-          <option>Startup</option>
-          <option>Other</option>
-        </select>
+  <header class="topbar">
+    <div class="brand">
+      <img src="logo-pefso.png" alt="PEFSO Logo" class="logo" />
+      <div>
+        <h1>PEFSO Business Control</h1>
+        <p>Product Master · CRM · Export Document Flow</p>
       </div>
-      <textarea id="c_notes" placeholder="Notes"></textarea>
-      <button id="createCustomerBtn" onclick="createCustomer()">Create Customer</button>
     </div>
+    <div id="userInfo" class="user-info">Not logged in</div>
+  </header>
 
-    <div class="section">
-      <h3>Customer List</h3>
-      <div id="customers"></div>
-    </div>
-  </div>
-</div>
+  <main class="app">
 
-<script src="app.js"></script>
+    <section id="loginBox" class="login-card">
+      <h2>Đăng nhập nội bộ</h2>
+      <p>Nhập email đã được khai báo trong sheet USERS.</p>
+      <input id="email" type="email" placeholder="Email công ty" value="thangmq@pefso.com" />
+      <button id="loginBtn" onclick="login()">Login</button>
+    </section>
+
+    <section id="appBox" style="display:none">
+
+      <nav class="tabs">
+        <button onclick="showSection('dashboardSection')">Dashboard</button>
+        <button onclick="showSection('productSection')">Products</button>
+        <button onclick="showSection('customerSection')">Customers</button>
+        <button onclick="showSection('flowSection')">Sales Flow</button>
+      </nav>
+
+      <section id="dashboardSection" class="page-section active-section">
+        <h2>Dashboard</h2>
+        <div id="dashboard" class="dashboard-grid"></div>
+      </section>
+
+      <section id="productSection" class="page-section">
+        <div class="section-header">
+          <h2>Product Master</h2>
+          <p>Dữ liệu gốc cho báo giá, PI, CI, Packing List, VAT và Hải quan.</p>
+        </div>
+
+        <div class="two-column">
+          <div class="card">
+            <h3>Tạo mã sản phẩm mới</h3>
+
+            <div class="form-grid">
+              <input id="p_name_en" placeholder="Product Name EN *" />
+              <input id="p_name_vn" placeholder="Tên tiếng Việt *" />
+              <input id="p_hs_code" placeholder="HS Code *" />
+              <input id="p_category" placeholder="Category: Reed / Rattan / Packaging *" />
+              <input id="p_material" placeholder="Material *" />
+              <input id="p_specification" placeholder="Specification *" />
+              <input id="p_unit" placeholder="Unit: pcs / bunch / kg / set *" />
+              <input id="p_moq" placeholder="MOQ" />
+              <input id="p_standard_price" placeholder="Standard Price" />
+              <input id="p_currency" placeholder="Currency: USD / VND" />
+            </div>
+
+            <textarea id="p_customs_description" placeholder="Customs Description"></textarea>
+            <textarea id="p_vat_description" placeholder="VAT Description"></textarea>
+            <textarea id="p_packing_standard" placeholder="Packing Standard"></textarea>
+            <textarea id="p_notes" placeholder="Notes"></textarea>
+
+            <button id="createProductBtn" onclick="createProduct()">Create Product</button>
+          </div>
+
+          <div class="card">
+            <h3>Product List</h3>
+            <div id="products" class="table-wrap"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="customerSection" class="page-section">
+        <div class="section-header">
+          <h2>Customer CRM</h2>
+          <p>Quản lý khách hàng và lịch sử giao dịch.</p>
+        </div>
+
+        <div class="two-column">
+          <div class="card">
+            <h3>Tạo khách hàng mới</h3>
+
+            <div class="form-grid">
+              <input id="c_company" placeholder="Company Name *" />
+              <input id="c_contact" placeholder="Contact Person" />
+              <input id="c_email" placeholder="Email" />
+              <input id="c_phone" placeholder="Phone" />
+              <input id="c_country" placeholder="Country" />
+              <select id="c_type">
+                <option>Brand</option>
+                <option>OEM</option>
+                <option>Distributor</option>
+                <option>Trading Company</option>
+                <option>Startup</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <textarea id="c_notes" placeholder="Notes"></textarea>
+            <button id="createCustomerBtn" onclick="createCustomer()">Create Customer</button>
+          </div>
+
+          <div class="card">
+            <h3>Customer List</h3>
+            <div id="customers" class="table-wrap"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="flowSection" class="page-section">
+        <div class="section-header">
+          <h2>Sales to Export Document Flow</h2>
+          <p>Luồng chuẩn: Inquiry → Quotation → PI → Order → CI → Packing List → Payment.</p>
+        </div>
+
+        <div class="flow-grid">
+          <div class="flow-card">1. Inquiry</div>
+          <div class="flow-card">2. Quotation</div>
+          <div class="flow-card">3. Proforma Invoice</div>
+          <div class="flow-card">4. Order</div>
+          <div class="flow-card">5. Commercial Invoice</div>
+          <div class="flow-card">6. Packing List</div>
+          <div class="flow-card">7. Payment Tracking</div>
+        </div>
+
+        <div class="card">
+          <h3>Ghi chú triển khai</h3>
+          <p>
+            Module này đã có API backend. Giao diện nhập chi tiết cho Inquiry, Quotation, PI,
+            CI, Packing List và Payment sẽ triển khai sau khi Product Master và Customer Master chạy ổn định.
+          </p>
+        </div>
+      </section>
+
+    </section>
+  </main>
+
+  <script>
+    function showSection(sectionId) {
+      document.querySelectorAll('.page-section').forEach(section => {
+        section.classList.remove('active-section');
+      });
+      document.getElementById(sectionId).classList.add('active-section');
+    }
+  </script>
+
+  <script src="app.js"></script>
 </body>
 </html>
