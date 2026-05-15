@@ -758,4 +758,208 @@ tr:hover td {
   .dashboard-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}/* ===== PEFSO FINAL UI REFINEMENT - LOGO VERSION ===== */
+
+.sidebar {
+  width: 300px;
+  padding: 18px;
+}
+
+.main-shell {
+  margin-left: 300px;
+}
+
+.sidebar-brand {
+  height: 96px;
+  padding: 12px;
+  border-radius: 20px;
+  background: #ffffff;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.sidebar-logo {
+  width: 250px;
+  max-width: 100%;
+  max-height: 72px;
+  object-fit: contain;
+}
+
+.sidebar-brand div {
+  display: none;
+}
+
+.sidebar-menu {
+  margin-top: 12px;
+  gap: 10px;
+}
+
+.sidebar-menu .nav-btn {
+  padding: 16px 18px;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.sidebar-menu .nav-btn.active {
+  background: linear-gradient(135deg, #ff9800, #f28c00);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+}
+
+.topbar {
+  height: 96px;
+  padding: 14px 34px;
+}
+
+.topbar-brand {
+  gap: 18px;
+}
+
+.topbar-logo {
+  width: 480px;
+  max-width: 52vw;
+  max-height: 72px;
+  object-fit: contain;
+}
+
+.topbar-brand div {
+  display: none;
+}
+
+.user-info {
+  padding: 13px 20px;
+  border-radius: 999px;
+  font-size: 14px;
+  background: linear-gradient(135deg, #002b4f, #063b68);
+}
+
+.app {
+  max-width: 1560px;
+  padding: 30px 38px;
+}
+
+.page-title {
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dashboard-grid {
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+  grid-template-columns: repeat(4, minmax(210px, 1fr));
+  gap: 18px;
+}
+
+.dashboard-grid .card {
+  min-height: 138px;
+}
+
+.dashboard-lower-grid {
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+  grid-template-columns: 2fr 0.9fr;
+  gap: 20px;
+}
+
+.two-column {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.card {
+  border-radius: 22px;
+}
+
+.card b {
+  font-size: 16px;
+}
+
+.card span {
+  font-size: 36px;
+}
+
+.sales-flow {
+  justify-content: space-between;
+}
+
+.sales-flow div {
+  min-width: 120px;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main-shell {
+    margin-left: 0;
+  }
+
+  .topbar-logo {
+    width: 360px;
+    max-width: 70vw;
+  }
+
+  .topbar-brand div {
+    display: none;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-lower-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile */
+@media (max-width: 540px) {
+  .topbar {
+    height: 76px;
+    padding: 10px 14px;
+  }
+
+  .topbar-logo {
+    width: 230px;
+    max-width: 72vw;
+  }
+
+  .mobile-menu-icon {
+    font-size: 22px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-grid .card {
+    min-height: 112px;
+  }
+
+  .card span {
+    font-size: 28px;
+  }
+
+  .page-title {
+    margin-top: 8px;
+  }
+
+  .page-title h2 {
+    font-size: 24px;
+  }
+
+  .app {
+    padding: 16px;
+    padding-bottom: 100px;
+  }
 }
