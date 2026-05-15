@@ -9,146 +9,305 @@
 </head>
 
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <img src="logo-pefso.png" alt="PEFSO Logo" class="logo" />
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img src="logo-pefso.png" alt="PEFSO Logo" class="sidebar-logo" />
       <div>
-        <h1>PEFSO Business Control</h1>
-        <p>Product Master · CRM · Export Document Flow</p>
+        <h1>PEFSO</h1>
+        <p>Business Control</p>
       </div>
     </div>
-    <div id="userInfo" class="user-info">Not logged in</div>
-  </header>
 
-  <main class="app">
-    <section id="loginBox" class="login-card">
-      <h2>Đăng nhập nội bộ</h2>
-      <p>Nhập email đã được khai báo trong sheet USERS.</p>
-      <input id="email" type="email" placeholder="Email công ty" value="thangmq@pefso.com" />
-      <button id="loginBtn" onclick="login()">Login</button>
-    </section>
+    <nav class="sidebar-menu">
+      <button class="nav-btn active" onclick="showSection('dashboardSection', this)">Dashboard</button>
+      <button class="nav-btn" onclick="showSection('productSection', this)">Products</button>
+      <button class="nav-btn" onclick="showSection('customerSection', this)">Customers</button>
+      <button class="nav-btn" onclick="showSection('inquirySection', this)">Inquiry</button>
+      <button class="nav-btn" onclick="showSection('quotationSection', this)">Quotation</button>
+      <button class="nav-btn" onclick="showSection('piSection', this)">PI</button>
+      <button class="nav-btn" onclick="showSection('orderSection', this)">Orders</button>
+      <button class="nav-btn" onclick="showSection('cipklSection', this)">CI / PKL</button>
+      <button class="nav-btn" onclick="showSection('paymentSection', this)">Payment</button>
+      <button class="nav-btn" onclick="showSection('settingsSection', this)">Settings</button>
+    </nav>
 
-    <section id="appBox" style="display:none">
-      <nav class="tabs">
-        <button onclick="showSection('dashboardSection')">Dashboard</button>
-        <button onclick="showSection('productSection')">Products</button>
-        <button onclick="showSection('customerSection')">Customers</button>
-        <button onclick="showSection('flowSection')">Sales Flow</button>
-      </nav>
+    <div class="sidebar-footer">
+      <p>Version 1.2</p>
+      <p>© 2026 PEFSO</p>
+    </div>
+  </aside>
 
-      <section id="dashboardSection" class="page-section active-section">
-        <h2>Dashboard</h2>
-        <div id="dashboard" class="dashboard-grid"></div>
+  <div class="main-shell">
+    <header class="topbar">
+      <div class="mobile-menu-icon">☰</div>
+
+      <div class="topbar-brand">
+        <img src="logo-pefso.png" alt="PEFSO Logo" class="topbar-logo" />
+        <div>
+          <h2>PEFSO Business Control</h2>
+          <p>Product Master · CRM · Export Document Flow</p>
+        </div>
+      </div>
+
+      <div id="userInfo" class="user-info">Not logged in</div>
+    </header>
+
+    <main class="app">
+      <section id="loginBox" class="login-card">
+        <h2>Đăng nhập nội bộ</h2>
+        <p>Nhập email đã được khai báo trong sheet USERS.</p>
+        <input id="email" type="email" placeholder="Email công ty" value="thangmq@pefso.com" />
+        <button id="loginBtn" onclick="login()">Login</button>
       </section>
 
-      <section id="productSection" class="page-section">
-        <div class="section-header">
-          <h2>Product Master</h2>
-          <p>Dữ liệu gốc cho báo giá, PI, CI, Packing List, VAT và Hải quan.</p>
-        </div>
+      <section id="appBox" style="display:none">
+        <section id="dashboardSection" class="page-section active-section">
+          <div class="page-title">
+            <div>
+              <h2>Dashboard</h2>
+              <p>Tổng quan hoạt động kinh doanh</p>
+            </div>
+          </div>
 
-        <div class="two-column">
-          <div class="card">
-            <h3>Tạo mã sản phẩm mới</h3>
+          <div id="dashboard" class="dashboard-grid"></div>
 
-            <div class="form-grid">
-              <input id="p_name_en" placeholder="Product Name EN *" />
-              <input id="p_name_vn" placeholder="Tên tiếng Việt *" />
-              <input id="p_hs_code" placeholder="HS Code *" />
-              <input id="p_category" placeholder="Category: Reed / Rattan / Packaging *" />
-              <input id="p_material" placeholder="Material *" />
-              <input id="p_specification" placeholder="Specification *" />
-              <input id="p_unit" placeholder="Unit: pcs / bunch / kg / set *" />
-              <input id="p_moq" placeholder="MOQ" />
-              <input id="p_standard_price" placeholder="Standard Price" />
-              <input id="p_currency" placeholder="Currency: USD / VND" />
+          <div class="dashboard-lower-grid">
+            <div class="card">
+              <h3>Sales Flow Overview</h3>
+              <div class="sales-flow">
+                <div>Inquiry</div>
+                <span>→</span>
+                <div>Quotation</div>
+                <span>→</span>
+                <div>PI</div>
+                <span>→</span>
+                <div>Order</div>
+                <span>→</span>
+                <div>CI / PKL</div>
+                <span>→</span>
+                <div>Payment</div>
+              </div>
             </div>
 
-            <textarea id="p_customs_description" placeholder="Customs Description"></textarea>
-            <textarea id="p_vat_description" placeholder="VAT Description"></textarea>
-            <textarea id="p_packing_standard" placeholder="Packing Standard"></textarea>
-            <textarea id="p_notes" placeholder="Notes"></textarea>
+            <div class="card">
+              <h3>Upcoming Follow-ups</h3>
+              <p class="muted">Follow-up detail view sẽ triển khai ở bước sau.</p>
+            </div>
+          </div>
+        </section>
 
-            <button id="createProductBtn" onclick="createProduct()">Create Product</button>
+        <section id="productSection" class="page-section">
+          <div class="page-title">
+            <div>
+              <h2>Product Master</h2>
+              <p>Dữ liệu gốc cho báo giá, PI, CI, Packing List, VAT và Hải quan.</p>
+            </div>
           </div>
 
-          <div class="card">
-            <h3>Product List</h3>
-            <div id="products" class="table-wrap"></div>
-          </div>
-        </div>
-      </section>
+          <div class="two-column">
+            <div class="card">
+              <h3>Tạo mã sản phẩm mới</h3>
 
-      <section id="customerSection" class="page-section">
-        <div class="section-header">
-          <h2>Customer CRM</h2>
-          <p>Quản lý khách hàng và lịch sử giao dịch.</p>
-        </div>
+              <div class="form-grid">
+                <input id="p_name_en" placeholder="Product Name EN *" />
+                <input id="p_name_vn" placeholder="Tên tiếng Việt *" />
+                <input id="p_hs_code" placeholder="HS Code *" />
+                <input id="p_category" placeholder="Category: Reed / Rattan / Packaging *" />
+                <input id="p_material" placeholder="Material *" />
+                <input id="p_specification" placeholder="Specification *" />
+                <input id="p_unit" placeholder="Unit: pcs / bunch / kg / set *" />
+                <input id="p_moq" placeholder="MOQ" />
+                <input id="p_standard_price" placeholder="Standard Price" />
+                <input id="p_currency" placeholder="Currency: USD / VND" />
+              </div>
 
-        <div class="two-column">
-          <div class="card">
-            <h3>Tạo khách hàng mới</h3>
+              <textarea id="p_customs_description" placeholder="Customs Description"></textarea>
+              <textarea id="p_vat_description" placeholder="VAT Description"></textarea>
+              <textarea id="p_packing_standard" placeholder="Packing Standard"></textarea>
+              <textarea id="p_notes" placeholder="Notes"></textarea>
 
-            <div class="form-grid">
-              <input id="c_company" placeholder="Company Name *" />
-              <input id="c_contact" placeholder="Contact Person" />
-              <input id="c_email" placeholder="Email" />
-              <input id="c_phone" placeholder="Phone" />
-              <input id="c_country" placeholder="Country" />
-              <select id="c_type">
-                <option>Brand</option>
-                <option>OEM</option>
-                <option>Distributor</option>
-                <option>Trading Company</option>
-                <option>Startup</option>
-                <option>Other</option>
-              </select>
+              <button id="createProductBtn" onclick="createProduct()">Create Product</button>
             </div>
 
-            <textarea id="c_notes" placeholder="Notes"></textarea>
-            <button id="createCustomerBtn" onclick="createCustomer()">Create Customer</button>
+            <div class="card">
+              <h3>Product List</h3>
+              <div id="products" class="table-wrap"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="customerSection" class="page-section">
+          <div class="page-title">
+            <div>
+              <h2>Customer CRM</h2>
+              <p>Quản lý khách hàng và lịch sử giao dịch.</p>
+            </div>
           </div>
 
-          <div class="card">
-            <h3>Customer List</h3>
-            <div id="customers" class="table-wrap"></div>
+          <div class="two-column">
+            <div class="card">
+              <h3>Tạo khách hàng mới</h3>
+
+              <div class="form-grid">
+                <input id="c_company" placeholder="Company Name *" />
+                <input id="c_contact" placeholder="Contact Person" />
+                <input id="c_email" placeholder="Email" />
+                <input id="c_phone" placeholder="Phone" />
+                <input id="c_country" placeholder="Country" />
+                <select id="c_type">
+                  <option>Brand</option>
+                  <option>OEM</option>
+                  <option>Distributor</option>
+                  <option>Trading Company</option>
+                  <option>Startup</option>
+                  <option>Other</option>
+                </select>
+              </div>
+
+              <textarea id="c_notes" placeholder="Notes"></textarea>
+              <button id="createCustomerBtn" onclick="createCustomer()">Create Customer</button>
+            </div>
+
+            <div class="card">
+              <h3>Customer List</h3>
+              <div id="customers" class="table-wrap"></div>
+            </div>
           </div>
-        </div>
+        </section>
+
+        <section id="inquirySection" class="page-section">
+          <div class="page-title">
+            <div>
+              <h2>Inquiry</h2>
+              <p>Ghi nhận hỏi hàng từ khách.</p>
+            </div>
+          </div>
+          <div class="card placeholder-card">
+            <h3>Create Inquiry</h3>
+            <p>Form nhập Inquiry sẽ triển khai sau khi Product và Customer chạy ổn định.</p>
+          </div>
+        </section>
+
+        <section id="quotationSection" class="page-section">
+          <div class="page-title">
+            <div>
+              <h2>Quotation</h2>
+              <p>Quản lý báo giá và trạng thái phản hồi.</p>
+            </div>
+          </div>
+          <div class="card placeholder-card">
+            <h3>Create Quotation</h3>
+            <p>Form báo giá sẽ triển khai ở bước tiếp theo.</p>
+          </div>
+        </section>
+
+        <section id="piSection" class="page-section">
+          <div class="page-title">
+            <div>
+              <h2>PI - Proforma Invoice</h2>
+              <p>Chuyển báo giá đã được khách xác nhận thành PI.</p>
+            </div>
+          </div>
+          <div class="card placeholder-card">
+            <h3>Create PI</h3>
+            <p>Form PI sẽ triển khai sau module Quotation.</p>
+          </div>
+        </section>
+
+        <section id="orderSection" class="page-section">
+          <div class="page-title">
+            <div>
+              <h2>Orders</h2>
+              <p>Quản lý đơn hàng sau khi PI được xác nhận.</p>
+            </div>
+          </div>
+          <div class="card placeholder-card">
+            <h3>Create Order</h3>
+            <p>Order module sẽ kết nối từ PI.</p>
+          </div>
+        </section>
+
+        <section id="cipklSection" class="page-section">
+          <div class="page-title">
+            <div>
+              <h2>CI / PKL</h2>
+              <p>Commercial Invoice và Packing List phục vụ hải quan, kế toán và xuất hàng.</p>
+            </div>
+          </div>
+          <div class="card placeholder-card">
+            <h3>Create CI / Packing List</h3>
+            <p>Module này sẽ tạo bản ghi CI và Packing List từ Order.</p>
+          </div>
+        </section>
+
+        <section id="paymentSection" class="page-section">
+          <div class="page-title">
+            <div>
+              <h2>Payment Tracking</h2>
+              <p>Theo dõi đặt cọc, thanh toán còn lại và quá hạn.</p>
+            </div>
+          </div>
+          <div class="card placeholder-card">
+            <h3>Create Payment Record</h3>
+            <p>Payment module sẽ kết nối PI, Order và CI.</p>
+          </div>
+        </section>
+
+        <section id="settingsSection" class="page-section">
+          <div class="page-title">
+            <div>
+              <h2>Settings</h2>
+              <p>Cấu hình người dùng, trạng thái và danh mục hệ thống.</p>
+            </div>
+          </div>
+          <div class="card placeholder-card">
+            <h3>System Settings</h3>
+            <p>Settings sẽ triển khai ở giai đoạn sau.</p>
+          </div>
+        </section>
       </section>
+    </main>
 
-      <section id="flowSection" class="page-section">
-        <div class="section-header">
-          <h2>Sales to Export Document Flow</h2>
-          <p>Luồng chuẩn: Inquiry → Quotation → PI → Order → CI → Packing List → Payment.</p>
-        </div>
+    <nav class="mobile-bottom-nav">
+      <button onclick="showSection('dashboardSection')">Dashboard</button>
+      <button onclick="showSection('productSection')">Products</button>
+      <button onclick="showSection('customerSection')">Customers</button>
+      <button onclick="showSection('inquirySection')">Inquiry</button>
+      <button onclick="toggleMoreMenu()">More</button>
+    </nav>
 
-        <div class="flow-grid">
-          <div class="flow-card">1. Inquiry</div>
-          <div class="flow-card">2. Quotation</div>
-          <div class="flow-card">3. Proforma Invoice</div>
-          <div class="flow-card">4. Order</div>
-          <div class="flow-card">5. Commercial Invoice</div>
-          <div class="flow-card">6. Packing List</div>
-          <div class="flow-card">7. Payment Tracking</div>
-        </div>
-
-        <div class="card">
-          <h3>Ghi chú triển khai</h3>
-          <p>
-            Module này đã có API backend. Giao diện nhập chi tiết cho Inquiry, Quotation, PI,
-            CI, Packing List và Payment sẽ triển khai sau khi Product Master và Customer Master chạy ổn định.
-          </p>
-        </div>
-      </section>
-    </section>
-  </main>
+    <div id="mobileMoreMenu" class="mobile-more-menu">
+      <button onclick="showSection('quotationSection'); toggleMoreMenu()">Quotation</button>
+      <button onclick="showSection('piSection'); toggleMoreMenu()">PI</button>
+      <button onclick="showSection('orderSection'); toggleMoreMenu()">Orders</button>
+      <button onclick="showSection('cipklSection'); toggleMoreMenu()">CI / PKL</button>
+      <button onclick="showSection('paymentSection'); toggleMoreMenu()">Payment</button>
+      <button onclick="showSection('settingsSection'); toggleMoreMenu()">Settings</button>
+    </div>
+  </div>
 
   <script>
-    function showSection(sectionId) {
+    function showSection(sectionId, buttonEl) {
       document.querySelectorAll('.page-section').forEach(section => {
         section.classList.remove('active-section');
       });
-      document.getElementById(sectionId).classList.add('active-section');
+
+      const target = document.getElementById(sectionId);
+      if (target) target.classList.add('active-section');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      if (buttonEl) buttonEl.classList.add('active');
+
+      const menu = document.getElementById('mobileMoreMenu');
+      if (menu) menu.classList.remove('show');
+    }
+
+    function toggleMoreMenu() {
+      const menu = document.getElementById('mobileMoreMenu');
+      if (menu) menu.classList.toggle('show');
     }
   </script>
 
