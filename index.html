@@ -4,19 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PEFSO Business Control App V1.2</title>
+
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
   <aside class="sidebar">
-    <div class="sidebar-brand">
-      <img src="logo-pefso.png" alt="PEFSO Logo" class="sidebar-logo" />
-      <div>
-        <h1>PEFSO</h1>
-        <p>Business Control</p>
-      </div>
-    </div>
+    <div class="sidebar-brand"></div>
 
     <nav class="sidebar-menu">
       <button class="nav-btn active" onclick="showSection('dashboardSection', this)">Dashboard</button>
@@ -32,21 +27,15 @@
     </nav>
 
     <div class="sidebar-footer">
-      <p>Version 1.2</p>
-      <p>© 2026 PEFSO</p>
+      <div>Version 1.2</div>
+      <div>© 2026 PEFSO</div>
     </div>
   </aside>
 
   <div class="main-shell">
     <header class="topbar">
-      <div class="mobile-menu-icon">☰</div>
-
       <div class="topbar-brand">
-        <img src="logo-pefso.png" alt="PEFSO Logo" class="topbar-logo" />
-        <div>
-          <h2>PEFSO Business Control</h2>
-          <p>Product Master · CRM · Export Document Flow</p>
-        </div>
+        <h1>PEFSO BUSINESS CONTROL APP</h1>
       </div>
 
       <div id="userInfo" class="user-info">Not logged in</div>
@@ -56,17 +45,22 @@
       <section id="loginBox" class="login-card">
         <h2>Đăng nhập nội bộ</h2>
         <p>Nhập email đã được khai báo trong sheet USERS.</p>
-        <input id="email" type="email" placeholder="Email công ty" value="thangmq@pefso.com" />
+
+        <input
+          id="email"
+          type="email"
+          placeholder="Email công ty"
+          value="thangmq@pefso.com"
+        />
+
         <button id="loginBtn" onclick="login()">Login</button>
       </section>
 
       <section id="appBox" style="display:none">
         <section id="dashboardSection" class="page-section active-section">
           <div class="page-title">
-            <div>
-              <h2>Dashboard</h2>
-              <p>Tổng quan hoạt động kinh doanh</p>
-            </div>
+            <h2>Dashboard</h2>
+            <p>Tổng quan hoạt động kinh doanh</p>
           </div>
 
           <div id="dashboard" class="dashboard-grid"></div>
@@ -74,6 +68,7 @@
           <div class="dashboard-lower-grid">
             <div class="card">
               <h3>Sales Flow Overview</h3>
+
               <div class="sales-flow">
                 <div>Inquiry</div>
                 <span>→</span>
@@ -98,10 +93,8 @@
 
         <section id="productSection" class="page-section">
           <div class="page-title">
-            <div>
-              <h2>Product Master</h2>
-              <p>Dữ liệu gốc cho báo giá, PI, CI, Packing List, VAT và Hải quan.</p>
-            </div>
+            <h2>Product Master</h2>
+            <p>Dữ liệu gốc cho báo giá, PI, CI, Packing List, VAT và Hải quan.</p>
           </div>
 
           <div class="two-column">
@@ -138,10 +131,8 @@
 
         <section id="customerSection" class="page-section">
           <div class="page-title">
-            <div>
-              <h2>Customer CRM</h2>
-              <p>Quản lý khách hàng và lịch sử giao dịch.</p>
-            </div>
+            <h2>Customer CRM</h2>
+            <p>Quản lý khách hàng và lịch sử giao dịch.</p>
           </div>
 
           <div class="two-column">
@@ -154,6 +145,7 @@
                 <input id="c_email" placeholder="Email" />
                 <input id="c_phone" placeholder="Phone" />
                 <input id="c_country" placeholder="Country" />
+
                 <select id="c_type">
                   <option>Brand</option>
                   <option>OEM</option>
@@ -165,6 +157,7 @@
               </div>
 
               <textarea id="c_notes" placeholder="Notes"></textarea>
+
               <button id="createCustomerBtn" onclick="createCustomer()">Create Customer</button>
             </div>
 
@@ -177,92 +170,85 @@
 
         <section id="inquirySection" class="page-section">
           <div class="page-title">
-            <div>
-              <h2>Inquiry</h2>
-              <p>Ghi nhận hỏi hàng từ khách.</p>
-            </div>
+            <h2>Inquiry</h2>
+            <p>Ghi nhận hỏi hàng từ khách.</p>
           </div>
+
           <div class="card placeholder-card">
             <h3>Create Inquiry</h3>
-            <p>Form nhập Inquiry sẽ triển khai sau khi Product và Customer chạy ổn định.</p>
+            <p class="muted">Form nhập Inquiry sẽ triển khai sau khi Product và Customer chạy ổn định.</p>
           </div>
         </section>
 
         <section id="quotationSection" class="page-section">
           <div class="page-title">
-            <div>
-              <h2>Quotation</h2>
-              <p>Quản lý báo giá và trạng thái phản hồi.</p>
-            </div>
+            <h2>Quotation</h2>
+            <p>Quản lý báo giá và trạng thái phản hồi.</p>
           </div>
+
           <div class="card placeholder-card">
             <h3>Create Quotation</h3>
-            <p>Form báo giá sẽ triển khai ở bước tiếp theo.</p>
+            <p class="muted">Form báo giá sẽ triển khai ở bước tiếp theo.</p>
           </div>
         </section>
 
         <section id="piSection" class="page-section">
           <div class="page-title">
-            <div>
-              <h2>PI - Proforma Invoice</h2>
-              <p>Chuyển báo giá đã được khách xác nhận thành PI.</p>
-            </div>
+            <h2>PI - Proforma Invoice</h2>
+            <p>Chuyển báo giá đã được khách xác nhận thành PI.</p>
           </div>
+
           <div class="card placeholder-card">
             <h3>Create PI</h3>
-            <p>Form PI sẽ triển khai sau module Quotation.</p>
+            <p class="muted">Form PI sẽ triển khai sau module Quotation.</p>
           </div>
         </section>
 
         <section id="orderSection" class="page-section">
           <div class="page-title">
-            <div>
-              <h2>Orders</h2>
-              <p>Quản lý đơn hàng sau khi PI được xác nhận.</p>
-            </div>
+            <h2>Orders</h2>
+            <p>Quản lý đơn hàng sau khi PI được xác nhận.</p>
           </div>
+
           <div class="card placeholder-card">
             <h3>Create Order</h3>
-            <p>Order module sẽ kết nối từ PI.</p>
+            <p class="muted">Order module sẽ kết nối từ PI.</p>
           </div>
         </section>
 
         <section id="cipklSection" class="page-section">
           <div class="page-title">
-            <div>
-              <h2>CI / PKL</h2>
-              <p>Commercial Invoice và Packing List phục vụ hải quan, kế toán và xuất hàng.</p>
-            </div>
+            <h2>CI / PKL</h2>
+            <p>Commercial Invoice và Packing List phục vụ hải quan, kế toán và xuất hàng.</p>
           </div>
+
           <div class="card placeholder-card">
             <h3>Create CI / Packing List</h3>
-            <p>Module này sẽ tạo bản ghi CI và Packing List từ Order.</p>
+            <p class="muted">Module này sẽ tạo bản ghi CI và Packing List từ Order.</p>
           </div>
         </section>
 
         <section id="paymentSection" class="page-section">
           <div class="page-title">
-            <div>
-              <h2>Payment Tracking</h2>
-              <p>Theo dõi đặt cọc, thanh toán còn lại và quá hạn.</p>
-            </div>
+            <h2>Payment Tracking</h2>
+            <p>Theo dõi đặt cọc, thanh toán còn lại và quá hạn.</p>
           </div>
+
           <div class="card placeholder-card">
             <h3>Create Payment Record</h3>
-            <p>Payment module sẽ kết nối PI, Order và CI.</p>
+            <p class="muted">Payment module sẽ kết nối PI, Order và CI.</p>
           </div>
         </section>
 
         <section id="settingsSection" class="page-section">
           <div class="page-title">
-            <div>
-              <h2>Settings</h2>
-              <p>Cấu hình người dùng, trạng thái và danh mục hệ thống.</p>
-            </div>
+            <h2>Settings</h2>
+            <p>Cấu hình người dùng, trạng thái và danh mục hệ thống.</p>
           </div>
+
           <div class="card placeholder-card">
             <h3>System Settings</h3>
-            <p>Settings sẽ triển khai ở giai đoạn sau.</p>
+            <p class="muted">Settings sẽ triển khai ở giai đoạn sau.</p>
           </div>
         </section>
       </section>
@@ -285,31 +271,6 @@
       <button onclick="showSection('settingsSection'); toggleMoreMenu()">Settings</button>
     </div>
   </div>
-
-  <script>
-    function showSection(sectionId, buttonEl) {
-      document.querySelectorAll('.page-section').forEach(section => {
-        section.classList.remove('active-section');
-      });
-
-      const target = document.getElementById(sectionId);
-      if (target) target.classList.add('active-section');
-
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-
-      if (buttonEl) buttonEl.classList.add('active');
-
-      const menu = document.getElementById('mobileMoreMenu');
-      if (menu) menu.classList.remove('show');
-    }
-
-    function toggleMoreMenu() {
-      const menu = document.getElementById('mobileMoreMenu');
-      if (menu) menu.classList.toggle('show');
-    }
-  </script>
 
   <script src="app.js"></script>
 </body>
