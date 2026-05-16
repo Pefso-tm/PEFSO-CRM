@@ -37,6 +37,10 @@ textarea {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+button {
+  cursor: pointer;
+}
+
 /* SIDEBAR */
 
 .sidebar {
@@ -54,29 +58,26 @@ textarea {
 }
 
 .sidebar-brand {
-  height: 120px;
-  padding: 10px;
+  height: 140px;
   margin-bottom: 18px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.14);
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.sidebar-brand::before {
-  content: "";
-  width: 104px;
-  height: 104px;
-  background-image: url("pefso-symbol-512.png");
+  background-image: url("pefso-sidebar-logo.png");
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
 }
 
+.sidebar-brand::before {
+  display: none;
+}
+
+.sidebar-logo,
 .sidebar-brand div,
 .sidebar-brand h1,
-.sidebar-brand p,
-.sidebar-logo {
+.sidebar-brand p {
   display: none !important;
 }
 
@@ -96,7 +97,6 @@ textarea {
   border-radius: 12px;
   font-size: 14px;
   font-weight: 700;
-  cursor: pointer;
   transition: 0.2s ease;
 }
 
@@ -150,7 +150,6 @@ textarea {
 }
 
 .topbar-brand h2 {
-  margin: 0;
   color: var(--navy);
   font-size: 28px;
   font-weight: 900;
@@ -266,7 +265,7 @@ textarea {
   font-size: 24px;
   font-weight: 500;
   line-height: 1;
-  opacity: 0.92;
+  opacity: 0.9;
 }
 
 .dashboard-grid .card:nth-child(1)::before {
@@ -445,7 +444,6 @@ textarea:focus {
   margin-top: 8px;
   font-size: 14px;
   font-weight: 900;
-  cursor: pointer;
 }
 
 .card > button:hover,
@@ -522,7 +520,7 @@ tr:hover td {
     content: "";
     width: 70px;
     height: 54px;
-    background-image: url("pefso-symbol-mobile.png");
+    background-image: url("pefso-mobile-logo.png");
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
