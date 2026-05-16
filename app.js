@@ -567,3 +567,47 @@ function showToast(message, type = 'success') {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./service-worker.js').catch(() => {});
 }
+/* ===== NAVIGATION CONTROL - REQUIRED AFTER CLEAN INDEX ===== */
+
+window.showSection = function(sectionId, buttonEl) {
+  document.querySelectorAll('.page-section').forEach(section => {
+    section.classList.remove('active-section');
+  });
+
+  const target = document.getElementById(sectionId);
+  if (target) {
+    target.classList.add('active-section');
+  }
+
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+
+  if (buttonEl) {
+    buttonEl.classList.add('active');
+  } else {
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      const onclickValue = btn.getAttribute('onclick') || '';
+      if (onclickValue.includes(sectionId)) {
+        btn.classList.add('active');
+      }
+    });
+  }
+
+  const moreMenu = document.getElementById('mobileMoreMenu');
+  if (moreMenu) {
+    moreMenu.classList.remove('show');
+  }
+
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+};
+
+window.toggleMoreMenu = function() {
+  const menu = document.getElementById('mobileMoreMenu');
+  if (menu) {
+    menu.classList.toggle('show');
+  }
+};
